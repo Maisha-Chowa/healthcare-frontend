@@ -4,46 +4,40 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardMedia,
   Container,
   Grid,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import React from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const TopRatedDoctors = async () => {
   const res = await fetch("http://localhost:5001/api/v1/doctor?page=1&limit=3");
   const { data: doctors } = await res.json();
-  console.log(doctors);
+  //   console.log(doctors);
   return (
     <Box
       sx={{
         my: 10,
         py: 30,
-        backgroundColor: "rgba(20,20,20,0.1)",
-        clipPath: "polygon(0 0,100% 25%,100% 100%, 0 75%)",
+        backgroundColor: "rgba(20, 20, 20, 0.1)",
+        clipPath: "polygon(0 0, 100% 25%, 100% 100%, 0 75%)",
       }}
     >
       <Box sx={{ textAlign: "center" }}>
-        <Typography component="h1" variant="h4" fontWeight={700}>
+        <Typography variant="h4" component="h1" fontWeight={700}>
           Our Top Rated Doctors
         </Typography>
-        <Typography
-          component="p"
-          fontSize={18}
-          fontWeight={400}
-          sx={{
-            mt: 2,
-          }}
-        >
+        <Typography component="p" fontSize={18} fontWeight={400} sx={{ mt: 2 }}>
           Access to expert physicians and surgeons, advanced technologies
         </Typography>
         <Typography component="p" fontSize={18} fontWeight={400}>
-          and top quality surgery facilities right here
+          and top-quality surgery facilities right here.
         </Typography>
       </Box>
-      <Container>
+
+      <Container sx={{ margin: "30px auto" }}>
         <Grid container spacing={2}>
           {doctors.map((doctor: any) => (
             <Grid item key={doctor.id} md={4}>
@@ -52,8 +46,8 @@ const TopRatedDoctors = async () => {
                   <Image
                     src={doctor.profilePhoto}
                     alt="doctor"
-                    width={500}
-                    height={100}
+                    width={300}
+                    height={70}
                   />
                 </Box>
                 <CardContent>
@@ -81,6 +75,20 @@ const TopRatedDoctors = async () => {
             </Grid>
           ))}
         </Grid>
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          <Button
+            variant="outlined"
+            sx={{
+              marginTop: "20px",
+            }}
+          >
+            View ALL
+          </Button>
+        </Box>
       </Container>
     </Box>
   );
