@@ -1,6 +1,7 @@
 "use client";
 import {
   Box,
+  Button,
   Container,
   Grid,
   Paper,
@@ -12,6 +13,7 @@ import Image from "next/image";
 import React from "react";
 import assests from "@/assets";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -62,17 +64,72 @@ const Register = () => {
           </Stack>
           <Box>
             <Grid container spacing={2} m={1}>
-              <Grid size={12}>
-                <Item>
-                  <TextField
-                    label="Name"
-                    variant="outlined"
-                    size="small"
-                    fullWidth={true}
-                  />
-                </Item>
+              <Grid size={{ xs: 12 }}>
+                <TextField
+                  label="Name"
+                  type="text"
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Contact Number"
+                  type="text"
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Address"
+                  type="text"
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  required
+                />
               </Grid>
             </Grid>
+            <Button
+              sx={{
+                margin: "10px 0px",
+              }}
+              fullWidth={true}
+              type="submit"
+            >
+              Register
+            </Button>
+            <Typography>
+              Do you already have an account?{" "}
+              <Link href="/login" style={{ color: "blue" }}>
+                Login
+              </Link>
+            </Typography>
           </Box>
         </Box>
       </Stack>
