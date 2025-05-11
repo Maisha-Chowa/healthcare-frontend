@@ -15,13 +15,17 @@ import assests from "@/assets";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { register } from "module";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPatient } from "@/services/actions/registerPatient";
 import { toast } from "sonner";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.services";
 import { useRouter } from "next/navigation";
+import HForm from "@/components/forms/HForm";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import HInput from "@/components/forms/HInput";
 
 // const Item = styled(Paper)(({ theme }) => ({
 //   padding: theme.spacing(1),
@@ -29,29 +33,51 @@ import { useRouter } from "next/navigation";
 //   color: theme.palette.text.secondary,
 // }));
 
-interface IPatientData {
-  name: string;
-  email: string;
-  contactNumber: string;
-  address: string;
-}
+// interface IPatientData {
+//   name: string;
+//   email: string;
+//   contactNumber: string;
+//   address: string;
+// }
 
-interface IPatientRegisterFormData {
-  password: string;
-  patient: IPatientData;
-}
+// interface IPatientRegisterFormData {
+//   password: string;
+//   patient: IPatientData;
+// }
+export const patientZodValidationSchema = z.object({
+  name: z.string().min(1, "Please enter your name!"),
+  email: z.string().email("Please enter a valid email address!"),
+  contactNumber: z
+    .string()
+    .regex(/^\d{11}$/, "Please provide a valid phone number!"),
+  address: z.string().min(1, "Please enter your address!"),
+});
+
+export const validationSchema = z.object({
+  password: z.string().min(6, "Must be at least 6 characters"),
+  patient: patientZodValidationSchema,
+});
+
+export const defaultValues = {
+  password: "",
+  patient: {
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+  },
+};
+
 const Register = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IPatientRegisterFormData>();
-  const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (
-    values: any
-  ) => {
-    console.log(values);
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   watch,
+  //   formState: { errors },
+  // } = useForm<IPatientRegisterFormData>();
+
+  const handleRegister = async (values: FieldValues) => {
     const data = modifyPayload(values);
     try {
       const res = await registerPatient(data);
@@ -113,61 +139,44 @@ const Register = () => {
             </Box>
           </Stack>
           <Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <HForm
+              onSubmit={handleRegister}
+              resolver={zodResolver(validationSchema)}
+              defaultValues={defaultValues}
+            >
               <Grid container spacing={2} m={1}>
                 <Grid size={{ xs: 12 }}>
-                  <TextField
-                    label="Name"
-                    type="text"
-                    variant="outlined"
-                    size="small"
-                    fullWidth={true}
-                    required
-                    {...register("patient.name")}
-                  />
+                  <HInput label="Name" fullWidth={true} name="patient.name" />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
+                  <HInput
                     label="Email"
                     type="email"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    required
-                    {...register("patient.email")}
+                    name="patient.email"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
+                  <HInput
                     label="Password"
                     type="password"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    required
-                    {...register("password")}
+                    name="password"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
+                  <HInput
                     label="Contact Number"
-                    type="text"
-                    variant="outlined"
-                    size="small"
+                    type="tel"
                     fullWidth={true}
-                    required
-                    {...register("patient.contactNumber")}
+                    name="patient.contactNumber"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
+                  <HInput
                     label="Address"
-                    type="text"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    required
-                    {...register("patient.address")}
+                    name="patient.address"
                   />
                 </Grid>
               </Grid>
@@ -186,7 +195,7 @@ const Register = () => {
                   Login
                 </Link>
               </Typography>
-            </form>
+            </HForm>
           </Box>
         </Box>
       </Stack>
